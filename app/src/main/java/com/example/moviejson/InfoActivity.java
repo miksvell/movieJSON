@@ -15,6 +15,8 @@ public class InfoActivity extends AppCompatActivity {
     private TextView title;
     private TextView description;
     private ImageView img;
+    private TextView tickets;
+    private TextView premiere;
 
     private MovieModelClass mInitialNote;
     @Override
@@ -26,6 +28,8 @@ public class InfoActivity extends AppCompatActivity {
         title=findViewById(R.id.movieTitle);
         description=findViewById(R.id.movieDescription);
         img=findViewById(R.id.moviePoster);
+        premiere=findViewById(R.id.moviePremiere);
+        tickets=findViewById(R.id.movieTickets);
 
         if(getIncomingIntent()){
             setNoteProperties();
@@ -55,6 +59,8 @@ public class InfoActivity extends AppCompatActivity {
     private void setNoteProperties(){
         title.setText(mInitialNote.getName());
         Glide.with(this).load(mInitialNote.getImg()).into(img);
-        description.setText(mInitialNote.getId());
+        description.setText(mInitialNote.getDescription());
+        tickets.setText(mInitialNote.getTickets());
+        premiere.setText(mInitialNote.getPremiere());
     }
 }

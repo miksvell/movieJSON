@@ -7,14 +7,44 @@ public class MovieModelClass implements Parcelable {
     String id;
     String name;
     String img;
+    String description;
+    String premiere;
+    String tickets;
 
-    public MovieModelClass(String id, String name, String img) {
+    public MovieModelClass(String id, String name, String img, String description, String premiere, String tickets) {
         this.id = id;
         this.name = name;
         this.img = img;
+        this.description = description;
+        this.premiere = premiere;
+        this.tickets = tickets;
     }
 
     public MovieModelClass() {
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPremiere() {
+        return premiere;
+    }
+
+    public void setPremiere(String premiere) {
+        this.premiere = premiere;
+    }
+
+    public String getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(String tickets) {
+        this.tickets = tickets;
     }
 
     @Override
@@ -30,6 +60,9 @@ public class MovieModelClass implements Parcelable {
         id = in.readString();
         name = in.readString();
         img = in.readString();
+        description = in.readString();
+        premiere = in.readString();
+        tickets = in.readString();
     }
 
     public static final Creator<MovieModelClass> CREATOR = new Creator<MovieModelClass>() {
@@ -78,5 +111,8 @@ public class MovieModelClass implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeString(img);
+        dest.writeString(description);
+        dest.writeString(premiere);
+        dest.writeString(tickets);
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteListener {
 
-    private static String JSON_Url = "https://run.mocky.io/v3/d31f4730-5e91-4317-a42c-5cffbdb41928";
+    private static String JSON_Url = "http://10.0.2.2:8000/all";
     private static final String TAG = "MainActivity";
 
     List<MovieModelClass> movieList;
@@ -98,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
         @Override
         protected void onPostExecute(String s) {
             try {
-                JSONObject jsonObject = new JSONObject(s);
-                JSONArray jsonArray = jsonObject.getJSONArray("moviz");
+                //JSONObject jsonObject = new JSONObject(s);
+                //JSONArray jsonArray = jsonObject.getJSONArray("moviz");
+                JSONArray jsonArray = new JSONArray(s);
 
                 for(int i = 0; i<jsonArray.length();i++){
 
@@ -109,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
                     model.setId(jsonObject1.getString("year"));
                     model.setName(jsonObject1.getString("name"));
                     model.setImg(jsonObject1.getString("image"));
+                    model.setDescription(jsonObject1.getString("description"));
+                    model.setPremiere(jsonObject1.getString("premiere"));
+                    model.setTickets(jsonObject1.getString("tickets"));
 
                     movieList.add(model);
                 }
