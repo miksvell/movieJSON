@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteListener {
 
-    private static String JSON_Url = "http://10.0.2.2:8000/all";
+    private static String JSON_Url = "http://10.0.2.2:8080/api/v1/employees";
     private static final String TAG = "MainActivity";
 
     List<MovieModelClass> movieList;
