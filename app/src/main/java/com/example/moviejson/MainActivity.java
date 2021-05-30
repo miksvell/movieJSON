@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
     //JSON 2 LINK : https://run.mocky.io/v3/d31f4730-5e91-4317-a42c-5cffbdb41928
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Program kina");
         setContentView(R.layout.activity_main);
 
         movieList = new ArrayList<>();
@@ -107,7 +108,8 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
                     MovieModelClass model = new MovieModelClass();
-                    model.setId(jsonObject1.getString("year"));
+                    model.setId(jsonObject1.getString("id"));
+                    model.setYear(jsonObject1.getString("year"));
                     model.setName(jsonObject1.getString("name"));
                     model.setImg(jsonObject1.getString("image"));
                     model.setDescription(jsonObject1.getString("description"));

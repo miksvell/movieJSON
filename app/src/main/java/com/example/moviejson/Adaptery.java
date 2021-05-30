@@ -39,7 +39,7 @@ public class Adaptery extends RecyclerView.Adapter<Adaptery.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.id.setText(mData.get(position).getId());
+        holder.id.setText(mData.get(position).getYear());
         holder.name.setText(mData.get(position).getName());
         //Using glide libabry pre obrazok
         Glide.with(mContext)

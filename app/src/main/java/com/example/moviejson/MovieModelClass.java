@@ -5,14 +5,16 @@ import android.os.Parcelable;
 
 public class MovieModelClass implements Parcelable {
     String id;
+    String year;
     String name;
     String img;
     String description;
     String premiere;
     String tickets;
 
-    public MovieModelClass(String id, String name, String img, String description, String premiere, String tickets) {
+    public MovieModelClass(String id,String year, String name, String img, String description, String premiere, String tickets) {
         this.id = id;
+        this.year=year;
         this.name = name;
         this.img = img;
         this.description = description;
@@ -39,6 +41,14 @@ public class MovieModelClass implements Parcelable {
         this.premiere = premiere;
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public String getTickets() {
         return tickets;
     }
@@ -58,6 +68,7 @@ public class MovieModelClass implements Parcelable {
 
     protected MovieModelClass(Parcel in) {
         id = in.readString();
+        year = in.readString();
         name = in.readString();
         img = in.readString();
         description = in.readString();
@@ -109,6 +120,7 @@ public class MovieModelClass implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(year);
         dest.writeString(name);
         dest.writeString(img);
         dest.writeString(description);

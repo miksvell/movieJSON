@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +33,16 @@ public class InfoActivity extends AppCompatActivity {
     private TextView premiere;
     private RequestQueue mQueue;
     private String newTickets;
+    private EditText reserveEmail;
+    private EditText reserveTickets;
+    private String email;
+    private long ks,check_ks;
 
     private MovieModelClass mInitialNote;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Podrobnosti o predstavení");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Log.d(TAG, "onCreate: called");
 
@@ -45,6 +52,8 @@ public class InfoActivity extends AppCompatActivity {
         img=findViewById(R.id.moviePoster);
         premiere=findViewById(R.id.moviePremiere);
         tickets=findViewById(R.id.movieTickets);
+        reserveEmail=findViewById(R.id.reserve_email);
+        reserveTickets=findViewById(R.id.reserve_tickets);
         Button reserve = findViewById(R.id.button);
 
         mQueue = Volley.newRequestQueue(this);
@@ -71,27 +80,58 @@ public class InfoActivity extends AppCompatActivity {
     }
 
     private void reserveTickets() {
-        String url = "http://10.0.2.2:8080/api/v1/employees/1/4";
-        Log.i(TAG, "reserveTickets: "+url);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //JSONArray jsonArray = response.getJSONArray("employees");
-                            newTickets = response.getString("tickets");
-                            tickets.setText(newTickets);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+        email = reserveEmail.getText().toString();
+        if (email.length() == 0 || reserveTickets.getText().toString().length()==0)
+        {
+            if(email.length() == 0)
+                reserveEmail.setError("Prosim vyplnte email!");
+            if(reserveTickets.getText().toString().length()==0)
+                reserveTickets.setError("Prosim vyplnte pocet vstupeniek!");
+        }
+        else {
+            ks = Long.parseLong(reserveTickets.getText().toString());
+            check_ks=Long.parseLong(tickets.getText().toString());
+            Log.i(TAG, "reserveTickets: " + (check_ks-ks));
+            if((check_ks==0) || (check_ks-ks<0)){
+                Log.i(TAG, "reserveTickets: SOM TU V TOASTE");
+                Toast.makeText(InfoActivity.this,"Nedostatok lístkov! Počet dostupných lístkov je "+check_ks,Toast. LENGTH_SHORT).show();
             }
-        });
-        mQueue.add(request);
+            else {
+                String url = "http://10.0.2.2:8080/api/v1/employees/1/"+ks;
+                Log.i(TAG, "reserveTickets: " + url);
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    //JSONArray jsonArray = response.getJSONArray("employees");
+                                    newTickets = response.getString("tickets");
+                                    tickets.setText(newTickets);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+                mQueue.add(request);
+                sendMail();
+            }
+            }
+    }
+
+    private void sendMail(){
+        String mail = reserveEmail.getText().toString().trim();
+        String message = "Dobrý deň vážený zákazník "+mail+". Zasielame vám informáciu o rezervácií počtu "+reserveTickets.getText().toString()+" ks na filmové predstavenie "+title.getText().toString()+"! " +
+                "Na pokladni sa preukážte s týmto emailom pre prevzatie vašich rezervovaných vstupeniek!";
+        String subject = "Rezervácia vstupeniek na "+title.getText().toString();
+
+        JavaMailAPI javaMailAPI = new JavaMailAPI(this,mail,subject,message);
+
+        javaMailAPI.execute();
     }
 
     private boolean getIncomingIntent(){
