@@ -35,7 +35,7 @@ public class InfoActivity extends AppCompatActivity {
     private String newTickets;
     private EditText reserveEmail;
     private EditText reserveTickets;
-    private String email;
+    private String email,id;
     private long ks,check_ks;
 
     private MovieModelClass mInitialNote;
@@ -70,13 +70,6 @@ public class InfoActivity extends AppCompatActivity {
         else{
             Log.d(TAG, "onCreate: FAILURE");
         }
-
-
-        /*if(getIntent().hasExtra("selected_note")){
-            MovieModelClass movieModelClass = getIntent().getParcelableExtra("selected_note");
-            Log.d(TAG, "onCreate: "+ movieModelClass.toString());
-        }*/
-
     }
 
     private void reserveTickets() {
@@ -97,7 +90,7 @@ public class InfoActivity extends AppCompatActivity {
                 Toast.makeText(InfoActivity.this,"Nedostatok lístkov! Počet dostupných lístkov je "+check_ks,Toast. LENGTH_SHORT).show();
             }
             else {
-                String url = "http://10.0.2.2:8080/api/v1/employees/1/"+ks;
+                String url = "http://10.0.2.2:8080/api/v1/movies/"+id+"/"+ks;
                 Log.i(TAG, "reserveTickets: " + url);
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, null,
                         new Response.Listener<JSONObject>() {
@@ -145,6 +138,7 @@ public class InfoActivity extends AppCompatActivity {
     }
 
     private void setNoteProperties(){
+        id=mInitialNote.getId();
         title.setText(mInitialNote.getName());
         Glide.with(this).load(mInitialNote.getImg()).into(img);
         description.setText(mInitialNote.getDescription());

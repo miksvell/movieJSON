@@ -1,6 +1,7 @@
 package com.example.moviejson;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +9,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,8 +28,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteListener {
 
-    private static String JSON_Url = "http://10.0.2.2:8080/api/v1/employees";
+    private static String JSON_Url = "http://10.0.2.2:8080/api/v1/movies";
     private static final String TAG = "MainActivity";
+    private Adaptery adaptery;
 
     List<MovieModelClass> movieList;
     RecyclerView recyclerView;
@@ -99,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
         @Override
         protected void onPostExecute(String s) {
             try {
-                //JSONObject jsonObject = new JSONObject(s);
-                //JSONArray jsonArray = jsonObject.getJSONArray("moviz");
                 JSONArray jsonArray = new JSONArray(s);
 
                 for(int i = 0; i<jsonArray.length();i++){
@@ -130,10 +133,32 @@ public class MainActivity extends AppCompatActivity implements Adaptery.OnNoteLi
     }
 
     private void PutDataIntoRecyclerView(List<MovieModelClass> movieList){
-        Adaptery adaptery = new Adaptery(this,movieList,this);
+        adaptery = new Adaptery(this,movieList,this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
 
         recyclerView.setAdapter(adaptery);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        MenuItem menuItem = menu.findItem(R.id.search);
+        SearchView searchView= (SearchView) menuItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adaptery.getFilter().filter(newText.toString());
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
 }
